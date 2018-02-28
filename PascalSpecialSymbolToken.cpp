@@ -87,6 +87,19 @@ void PascalSpecialSymbolToken::extract() throw (string)
             break;
         }
 
+        // =>
+        case '=':
+		{
+        	current_ch=next_char(); //consume '='
+
+        	if(current_ch=='>')
+        	{
+        		text += current_ch;
+        		next_char(); //consume 'v'
+        	}
+        	break;
+		}
+
         // . or ..
         case '.':
         {
