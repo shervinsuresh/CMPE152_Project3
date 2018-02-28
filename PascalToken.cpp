@@ -117,7 +117,7 @@ void PascalToken::initialize()
         PascalTokenType::RIGHT_BRACE,
         PascalTokenType::UP_ARROW,
         PascalTokenType::DOT_DOT,
-        PascalTokenType::SET
+        PascalTokenType::SETTER
 
     };
 
@@ -133,7 +133,7 @@ void PascalToken::initialize()
 
         "LESS_THAN", "LESS_EQUALS", "GREATER_EQUALS", "GREATER_THAN",
         "LEFT_PAREN", "RIGHT_PAREN", "LEFT_BRACKET", "RIGHT_BRACKET",
-        "LEFT_BRACE", "RIGHT_BRACE", "UP_ARROW", "DOT_DOT","SET"
+        "LEFT_BRACE", "RIGHT_BRACE", "UP_ARROW", "DOT_DOT","SETTER"
     };
 
     for (int i = 0; i < ss_names.size(); i++)
