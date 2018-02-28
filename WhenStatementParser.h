@@ -39,7 +39,7 @@ public:
 
 private:
     // Synchronization set for THEN.
-    static set<PascalTokenType> THEN_SET;
+    static set<PascalTokenType> WHEN_SET;
 
     static bool INITIALIZED;
 
