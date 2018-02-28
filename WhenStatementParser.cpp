@@ -34,8 +34,8 @@ void WhenStatementParser::initialize()
 {
     if (INITIALIZED) return;
 
-    THEN_SET = StatementParser::STMT_START_SET;
-    THEN_SET.insert(PascalTokenType::WHEN); //MAKE TOKEN TYPE WHEN (THEN WENT HERE
+    WHEN_SET = StatementParser::STMT_START_SET;
+    WHEN_SET.insert(PascalTokenType::WHEN); //MAKE TOKEN TYPE WHEN (THEN WENT HERE
 
     set<PascalTokenType>::iterator it;
     for (it  = StatementParser::STMT_FOLLOW_SET.begin();
