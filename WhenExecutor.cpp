@@ -3,15 +3,15 @@
  *
  *  Created on: Feb 27, 2018
  *      Author: shervin
- * <h1>IfExecutor</h1>
+ * <h1>WhenExecutor</h1>
  *
- * <p>Execute an IF statement.</p>
+ * <p>Execute an When statement.</p>
  *
  * <p>Copyright (c) 2017 by Ronald Mak</p>
  * <p>For instructional purposes only.  No warranties.</p>
  */
 #include <vector>
-#include "IfExecutor.h"
+#include "WhenExecutor.h"
 #include "StatementExecutor.h"
 #include "ExpressionExecutor.h"
 #include "../../../Object.h"
