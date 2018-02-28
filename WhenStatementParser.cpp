@@ -81,7 +81,7 @@ ICodeNode *WhenStatementParser::parse_statement(Token *token) throw (string)
     // Parse the WHEN statement.
     // The WHEN node adopts the statement subtree as its second child.
     StatementParser statement_parser(this);
-    if_node->add_child(statement_parser.parse_statement(token));
+    when_node->add_child(statement_parser.parse_statement(token));
     token = current_token();
 
     // Look for an OTHERWISE.
