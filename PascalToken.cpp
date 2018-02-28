@@ -31,7 +31,7 @@ void PascalToken::initialize()
         "ELSE", "END", "FILE", "FOR", "FUNCTION", "GOTO", "IF", "IN",
         "LABEL", "MOD", "NIL", "NOT", "OF", "OR", "PACKED", "PROCEDURE",
         "PROGRAM", "RECORD", "REPEAT", "SET", "THEN", "TO", "TYPE",
-        "UNTIL", "VAR", "WHILE", "WITH","WHEN"
+        "UNTIL", "VAR", "WHILE", "WITH", "WHEN"
     };
 
     vector<PascalTokenType> rw_keys =
@@ -76,7 +76,6 @@ void PascalToken::initialize()
         PascalTokenType::WHILE,
         PascalTokenType::WITH,
         PascalTokenType::WHEN
-
     };
 
     for (int i = 0; i < rw_strings.size(); i++)
@@ -87,7 +86,7 @@ void PascalToken::initialize()
     vector<string> ss_strings =
     {
         "+", "-", "*", "/", ":=", ".", ",", ";", ":", "'", "=", "<>",
-        "<", "<=", ">=", ">", "(", ")", "[", "]", "{", "}",  "^", "..","=>"
+        "<", "<=", ">=", ">", "(", ")", "[", "]", "{", "}",  "^", ".."
     };
 
     vector<PascalTokenType> ss_keys =
@@ -116,9 +115,7 @@ void PascalToken::initialize()
         PascalTokenType::LEFT_BRACE,
         PascalTokenType::RIGHT_BRACE,
         PascalTokenType::UP_ARROW,
-        PascalTokenType::DOT_DOT,
-        PascalTokenType::SET
-
+        PascalTokenType::DOT_DOT
     };
 
     for (int i = 0; i < ss_strings.size(); i++)
@@ -133,7 +130,7 @@ void PascalToken::initialize()
 
         "LESS_THAN", "LESS_EQUALS", "GREATER_EQUALS", "GREATER_THAN",
         "LEFT_PAREN", "RIGHT_PAREN", "LEFT_BRACKET", "RIGHT_BRACKET",
-        "LEFT_BRACE", "RIGHT_BRACE", "UP_ARROW", "DOT_DOT","SET"
+        "LEFT_BRACE", "RIGHT_BRACE", "UP_ARROW", "DOT_DOT"
     };
 
     for (int i = 0; i < ss_names.size(); i++)
