@@ -66,7 +66,7 @@ ICodeNode *WhenStatementParser::parse_statement(Token *token) throw (string)
     // Parse the expression.
     // The IF node adopts the expression subtree as its first child.
     ExpressionParser expression_parser(this);
-    if_node->add_child(expression_parser.parse_statement(token));
+    when_node->add_child(expression_parser.parse_statement(token));
 
     // Synchronize at the THEN.
     token = synchronize(WHEN_SET);
