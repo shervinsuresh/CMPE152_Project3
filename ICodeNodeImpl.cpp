@@ -1,11 +1,3 @@
-/**
- * <h1>ICodeNodeImpl</h1>
- *
- * <p>An implementation of a node of the intermediate code.</p>
- *
- * <p>Copyright (c) 2017 by Ronald Mak</p>
- * <p>For instructional purposes only.  No warranties.</p>
- */
 #include <vector>
 #include <map>
 #include "ICodeNodeImpl.h"
@@ -41,6 +33,8 @@ void ICodeNodeImpl::initialize()
         NT_PARAMETERS,
         NT_IF,
 		NT_WHEN,
+		NT_OTHERWISE,
+		NT_WHEN_BRANCH,
         NT_SELECT,
         NT_SELECT_BRANCH,
         NT_SELECT_CONSTANTS,
@@ -89,7 +83,7 @@ void ICodeNodeImpl::initialize()
 
         // Statements
         "COMPOUND", "ASSIGN", "LOOP", "TEST", "CALL", "PARAMETERS",
-        "IF", "WHEN", "SELECT", "SELECT_BRANCH", "SELECT_CONSTANTS", "NO_OP", "OTHERWISE",
+        "IF", "WHEN", "OTHERWISE", "WHEN_BRANCH", "SELECT", "SELECT_BRANCH", "SELECT_CONSTANTS", "NO_OP", "OTHERWISE",
 
         // Relational operators
         "EQ", "NE", "LT", "LE", "GT", "GE", "NOT",
