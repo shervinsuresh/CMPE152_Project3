@@ -1,15 +1,11 @@
-/*
- * WhenStatementParser.cpp
- *
- *  Created on: Feb 27, 2018
- *      Author: shervin
- */
+/**
+ * <h1>WhenStatementParser</h1>
 
+ */
 #include <string>
 #include <set>
 #include "WhenStatementParser.h"
 #include "StatementParser.h"
-#include "AssignmentStatementParser.h"
 #include "ExpressionParser.h"
 #include "../PascalParserTD.h"
 #include "../PascalToken.h"
@@ -28,21 +24,21 @@ using namespace wci::intermediate::icodeimpl;
 
 bool WhenStatementParser::INITIALIZED = false;
 
-set<PascalTokenType> WhenStatementParser::WHEN_SET;
+set<PascalTokenType> WhenStatementParser::SYM_SET; //need a token name for '=>' symbol
 
 void WhenStatementParser::initialize()
 {
     if (INITIALIZED) return;
 
-    WHEN_SET = StatementParser::STMT_START_SET;
-    WHEN_SET.insert(PascalTokenType::WHEN); //MAKE TOKEN TYPE WHEN (THEN WENT HERE
+    SYM_SET = StatementParser::STMT_START_SET;
+    SYM_SET.insert(PascalTokenType::SYM);
 
     set<PascalTokenType>::iterator it;
     for (it  = StatementParser::STMT_FOLLOW_SET.begin();
          it != StatementParser::STMT_FOLLOW_SET.end();
          it++)
     {
-        WHEN_SET.insert(*it);
+        SYM_SET.insert(*it);
     }
 
     INITIALIZED = true;
@@ -56,45 +52,42 @@ WhenStatementParser::WhenStatementParser(PascalParserTD *parent)
 
 ICodeNode *WhenStatementParser::parse_statement(Token *token) throw (string)
 {
-    token = next_token(token);  // consume the WHEN?
+    token = next_token(token);  // consume the WHEN????
 
-    // Create an WHEN node.
-    ICodeNode *when_node =
-            ICodeFactory::create_icode_node((ICodeNodeType) NT_WHEN); //NT_WHEN WORKS?
+    // Create LOOP, TEST, and NOT nodes.
+    ICodeNode *loop_node =
+            ICodeFactory::create_icode_node((ICodeNodeType) NT_LOOP);
+    ICodeNode *test_node =
+            ICodeFactory::create_icode_node((ICodeNodeType) NT_TEST);
+    ICodeNode *not_node =
+            ICodeFactory::create_icode_node((ICodeNodeType) NT_NOT);
 
+    // The LOOP node adopts the TEST node as its first child.
+    // The TEST node adopts the NOT node as its only child.
+    loop_node->add_child(test_node);
+    test_node->add_child(not_node);
 
     // Parse the expression.
-    // The IF node adopts the expression subtree as its first child.
+    // The NOT node adopts the expression subtree as its only child.
     ExpressionParser expression_parser(this);
-    when_node->add_child(expression_parser.parse_statement(token));
+    not_node->add_child(expression_parser.parse_statement(token));
 
-    // Synchronize at the THEN.
-    token = synchronize(WHEN_SET);
-    if (token->get_type() == (TokenType) PT_WHEN)
+    // Synchronize at the DO.
+    token = synchronize(SYM_SET);
+    if (token->get_type() == (TokenType) PT_SYM)
     {
-        token = next_token(token);  // consume the WHEN
+        token = next_token(token);  // consume the DO
     }
     else {
-        error_handler.flag(token, MISSING_WHEN, this);
-    }
+        error_handler.flag(token, MISSING_SYM, this); //MISSING_SYM????
+		}
 
-    // Parse the WHEN statement.
-    // The WHEN node adopts the statement subtree as its second child.
+    // Parse the statement.
+    // The LOOP node adopts the statement subtree as its second child.
     StatementParser statement_parser(this);
-    when_node->add_child(statement_parser.parse_statement(token));
-    token = current_token();
+    loop_node->add_child(statement_parser.parse_statement(token));
 
-    // Look for an OTHERWISE.
-    if (token->get_type() == (TokenType) PT_OTHERWISE) //DO WE NEED TO ADD A PT_OTHERWISE? WHERE?
-    {
-        token = next_token(token);  // consume the WHEN
-
-        // Parse the OTHERWISE statement.
-        // The IF node adopts the statement subtree as its third child.
-        when_node->add_child(statement_parser.parse_statement(token));
-    }
-
-    return when_node;
+    return loop_node;
 }
 
 }}}}  // namespace wci::frontend::pascal::parsers
