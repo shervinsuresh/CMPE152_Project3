@@ -24,7 +24,7 @@ enum class ICodeNodeTypeImpl
 
     // Statements
     COMPOUND, ASSIGN, LOOP, TEST, CALL, PARAMETERS,
-    IF, SELECT, SELECT_BRANCH, SELECT_CONSTANTS, NO_OP,WHEN,
+    IF, SELECT, SELECT_BRANCH, SELECT_CONSTANTS, NO_OP, WHEN, OTHERWISE,
 
     // Relational operators
     EQ, NE, LT, LE, GT, GE, NOT,
@@ -56,6 +56,7 @@ constexpr ICodeNodeTypeImpl NT_CALL = ICodeNodeTypeImpl::CALL;
 constexpr ICodeNodeTypeImpl NT_PARAMETERS = ICodeNodeTypeImpl::PARAMETERS;
 constexpr ICodeNodeTypeImpl NT_IF = ICodeNodeTypeImpl::IF;
 constexpr ICodeNodeTypeImpl NT_WHEN = ICodeNodeTypeImpl::WHEN;
+constexpr ICodeNodeTypeImpl NT_OTHERWISE = ICodeNodeTypeImpl::OTHERWISE;
 constexpr ICodeNodeTypeImpl NT_SELECT = ICodeNodeTypeImpl::SELECT;
 constexpr ICodeNodeTypeImpl NT_SELECT_BRANCH =
                                         ICodeNodeTypeImpl::SELECT_BRANCH;
