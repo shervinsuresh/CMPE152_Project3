@@ -57,7 +57,7 @@ ICodeNode *WhenStatementParser::parse_statement(Token *token) throw (string)
     // Create LOOP, TEST, and NOT nodes.
     ICodeNode *loop_node =
             ICodeFactory::create_icode_node((ICodeNodeType) NT_LOOP);
-    while(token->get_type() != (TokenType) PT_OTHERWISE
+    while(token->get_type() != (TokenType) PT_OTHERWISE //ADDED LOOP-ks
 	{
 	ICodeNode *test_node =
             ICodeFactory::create_icode_node((ICodeNodeType) NT_TEST);
