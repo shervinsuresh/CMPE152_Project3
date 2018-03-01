@@ -1,7 +1,3 @@
-/**
- * <h1>WhenStatementParser</h1>
-
- */
 #include <string>
 #include <set>
 #include "WhenStatementParser.h"
@@ -32,6 +28,8 @@ void WhenStatementParser::initialize()
 
     SYM_SET = StatementParser::STMT_START_SET;
     SYM_SET.insert(PascalTokenType::SYM);
+    SYM_SET.insert(PascalTokenType::END);
+    SYM_SET.insert(PascalTokenType::OTHERWISE);
 
     set<PascalTokenType>::iterator it;
     for (it  = StatementParser::STMT_FOLLOW_SET.begin();
@@ -63,11 +61,13 @@ ICodeNode *WhenStatementParser::parse_statement(Token *token) throw (string)
             ICodeFactory::create_icode_node((ICodeNodeType) NT_TEST);
     ICodeNode *not_node =
             ICodeFactory::create_icode_node((ICodeNodeType) NT_NOT);
+    ICodeNode *otherwise_node = ICodeFactory::create_icode_node((ICodeNodeType) NT_OTHERWISE);
 
     // The LOOP node adopts the TEST node as its first child.
     // The TEST node adopts the NOT node as its only child.
     loop_node->add_child(test_node);
     test_node->add_child(not_node);
+    loop_node->add_child(otherwise_node);
 
     // Parse the expression.
     // The NOT node adopts the expression subtree as its only child.
@@ -80,10 +80,11 @@ ICodeNode *WhenStatementParser::parse_statement(Token *token) throw (string)
     {
         token = next_token(token);  // consume the =>
     }
-    else {
-        error_handler.flag(token, MISSING_SYM, this); //MISSING_SYM????
-		}
-		
+    else
+    {
+    		error_handler.flag(token, MISSING_SYM, this);
+	}
+
 
     // Parse the statement.
     // The LOOP node adopts the statement subtree as its second child.
@@ -93,15 +94,22 @@ ICodeNode *WhenStatementParser::parse_statement(Token *token) throw (string)
 	    // Look for an OTHERWISE.
     if (token->get_type() == (TokenType) PT_OTHERWISE)
     {
-        token = next_token(token);  // consume the =>
+        token = next_token(token);  // consume the otherwise
 
         // Parse the OTHERWISE statement.
         // The IF node adopts the statement subtree as its third child.
-        if_node->add_child(statement_parser.parse_statement(token));
+        if (token->get_type()==(TokenType) PT_SYM)
+        {
+        		token = next_token(token); //consume the =>
+        }
+
+        else
+        {
+        		error_handler.flag(token, MISSING_SYM, this);
+        }
     }
 
     return loop_node;
 }
 
 }}}}  // namespace wci::frontend::pascal::parsers
-
