@@ -46,6 +46,7 @@ private:
      * Initialize the synchronization set.
      */
     static void initialize();
+    ICodeNode *parse_branch(Token *token) throw(string);
 };
 
 }}}}  // namespace wci::frontend::pascal::parsers
