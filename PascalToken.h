@@ -1,12 +1,3 @@
-/**
- * <h1>PascalToken</h1>
- *
- * <p>Base class for Pascal token classes.</p>
- *
- * <p>Copyright (c) 2017 by Ronald Mak</p>
- * <p>For instructional purposes only.  No warranties.</p>
- */
-
 #ifndef WCI_FRONTEND_PASCAL_PASCALTOKEN_H_
 #define WCI_FRONTEND_PASCAL_PASCALTOKEN_H_
 
