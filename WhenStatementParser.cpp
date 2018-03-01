@@ -57,7 +57,9 @@ ICodeNode *WhenStatementParser::parse_statement(Token *token) throw (string)
     // Create LOOP, TEST, and NOT nodes.
     ICodeNode *loop_node =
             ICodeFactory::create_icode_node((ICodeNodeType) NT_LOOP);
-    ICodeNode *test_node =
+    while(token->get_type() != (TokenType) PT_OTHERWISE
+	{
+	ICodeNode *test_node =
             ICodeFactory::create_icode_node((ICodeNodeType) NT_TEST);
     ICodeNode *not_node =
             ICodeFactory::create_icode_node((ICodeNodeType) NT_NOT);
@@ -76,22 +78,30 @@ ICodeNode *WhenStatementParser::parse_statement(Token *token) throw (string)
     token = synchronize(SYM_SET);
     if (token->get_type() == (TokenType) PT_SYM)
     {
-        token = next_token(token);  // consume the DO
+        token = next_token(token);  // consume the =>
     }
     else {
         error_handler.flag(token, MISSING_SYM, this); //MISSING_SYM????
 		}
+		
 
     // Parse the statement.
     // The LOOP node adopts the statement subtree as its second child.
     StatementParser statement_parser(this);
     loop_node->add_child(statement_parser.parse_statement(token));
+	}//end while
+	    // Look for an OTHERWISE.
+    if (token->get_type() == (TokenType) PT_OTHERWISE)
+    {
+        token = next_token(token);  // consume the =>
+
+        // Parse the OTHERWISE statement.
+        // The IF node adopts the statement subtree as its third child.
+        if_node->add_child(statement_parser.parse_statement(token));
+    }
 
     return loop_node;
 }
 
 }}}}  // namespace wci::frontend::pascal::parsers
-
-
-
 
