@@ -2,6 +2,7 @@
 #include <set>
 #include "WhenStatementParser.h"
 #include "StatementParser.h"
+#include "AssignmentStatementParser.h"
 #include "ExpressionParser.h"
 #include "../PascalParserTD.h"
 #include "../PascalToken.h"
@@ -28,8 +29,7 @@ void WhenStatementParser::initialize()
 
     SYM_SET = StatementParser::STMT_START_SET;
     SYM_SET.insert(PascalTokenType::SYM);
-    SYM_SET.insert(PascalTokenType::END);
-    SYM_SET.insert(PascalTokenType::OTHERWISE);
+
 
     set<PascalTokenType>::iterator it;
     for (it  = StatementParser::STMT_FOLLOW_SET.begin();
@@ -53,44 +53,26 @@ ICodeNode *WhenStatementParser::parse_statement(Token *token) throw (string)
     token = next_token(token);  // consume the WHEN????
 
     // Create LOOP, TEST, and NOT nodes.
-    ICodeNode *loop_node =
-            ICodeFactory::create_icode_node((ICodeNodeType) NT_LOOP);
-    while(token->get_type() != (TokenType) PT_OTHERWISE) //ADDED LOOP-ks
+    ICodeNode *when_node =
+            ICodeFactory::create_icode_node((ICodeNodeType) NT_WHEN);
+    while((token->get_type() != (TokenType) PT_OTHERWISE) && (token->get_type() != (TokenType) PT_END) && (token != nullptr)) //ADDED LOOP-ks
 	{
-	ICodeNode *test_node =
-            ICodeFactory::create_icode_node((ICodeNodeType) NT_TEST);
-    ICodeNode *not_node =
-            ICodeFactory::create_icode_node((ICodeNodeType) NT_NOT);
-    ICodeNode *otherwise_node = ICodeFactory::create_icode_node((ICodeNodeType) NT_OTHERWISE);
+    		when_node->add_child(parse_branch(token));
 
-    // The LOOP node adopts the TEST node as its first child.
-    // The TEST node adopts the NOT node as its only child.
-    loop_node->add_child(test_node);
-    test_node->add_child(not_node);
-    loop_node->add_child(otherwise_node);
+    		token = current_token();
+    	  	TokenType token_type = token->get_type();
 
-    // Parse the expression.
-    // The NOT node adopts the expression subtree as its only child.
-    ExpressionParser expression_parser(this);
-    not_node->add_child(expression_parser.parse_statement(token));
+    	   	if (token_type == (TokenType) PT_SEMICOLON)
+    	    {
+    	   		token = next_token(token); //consume the ;
+    	  	}
 
-    // Synchronize at the DO.
-    token = synchronize(SYM_SET);
-    if (token->get_type() == (TokenType) PT_SYM)
-    {
-        token = next_token(token);  // consume the =>
-    }
-    else
-    {
-    		error_handler.flag(token, MISSING_SYM, this);
-	}
-
-
-    // Parse the statement.
-    // The LOOP node adopts the statement subtree as its second child.
-    StatementParser statement_parser(this);
-    loop_node->add_child(statement_parser.parse_statement(token));
+    	   	else
+    	  	{
+    	      	error_handler.flag(token, MISSING_SEMICOLON, this);
+    		}
 	}//end while
+
 	    // Look for an OTHERWISE.
     if (token->get_type() == (TokenType) PT_OTHERWISE)
     {
@@ -98,6 +80,7 @@ ICodeNode *WhenStatementParser::parse_statement(Token *token) throw (string)
 
         // Parse the OTHERWISE statement.
         // The IF node adopts the statement subtree as its third child.
+        token = synchronize(SYM_SET);
         if (token->get_type()==(TokenType) PT_SYM)
         {
         		token = next_token(token); //consume the =>
@@ -107,9 +90,57 @@ ICodeNode *WhenStatementParser::parse_statement(Token *token) throw (string)
         {
         		error_handler.flag(token, MISSING_SYM, this);
         }
+        ICodeNode *otherwise_node =
+                        ICodeFactory::create_icode_node((ICodeNodeType) NT_OTHERWISE);
+        StatementParser statementParser(this);
+        otherwise_node->add_child(statementParser.parse_statement(token));
+        when_node->add_child(otherwise_node);
     }
 
-    return loop_node;
+    else
+    {
+      	error_handler.flag(token, MISSING_OTHERWISE, this);
+    }
+
+    if (token->get_type() == (TokenType) PT_END)
+       {
+         token = next_token(token); //consume END
+       }
+       else
+       {
+         error_handler.flag(token, MISSING_END, this);
+       }
+}
+
+ICodeNode *WhenStatementParser::parse_branch(Token *token) throw (string)
+{
+  //create a WHEN_BRANCH node EQ and ASSIGN node
+  //the WHEN_BRANCH adopts the EQ node as it's first child
+  //and the ASSIGN branch as it's second child
+  ICodeNode *branch_node =
+            ICodeFactory::create_icode_node(
+                  (ICodeNodeType) NT_WHEN_BRANCH);
+  //parse the expression
+  // the branch_node adopts the expression subtree as it's first child
+  ExpressionParser expression_parser(this);
+  branch_node->add_child(expression_parser.parse_statement(token));
+
+  //Synchronize at the RIGHT_ARROW
+  token = synchronize(SYM_SET);
+  if (token->get_type() == (TokenType) PT_SYM)
+  {
+    token = next_token(token); //consume the RIGHT_ARROW
+  }
+  else {
+    error_handler.flag(token, MISSING_SYM, this);
+  }
+
+  //parse the when_branch statement. The branch_node adopts
+  //the statement subtree as its second child
+  StatementParser statementParser(this);
+  branch_node->add_child(statementParser.parse_statement(token));
+
+  return branch_node;
 }
 
 }}}}  // namespace wci::frontend::pascal::parsers
