@@ -4,7 +4,6 @@
  *  Created on: Feb 27, 2018
  *      Author: shervin
  */
-
 #ifndef WHENSTATEMENTPARSER_H_
 #define WHENSTATEMENTPARSER_H_
 
@@ -30,7 +29,7 @@ public:
     WhenStatementParser(PascalParserTD *parent);
 
     /**
-     * Parse an WHEN statement.
+     * Parse a WHILE statement.
      * @param token the initial token.
      * @return the root node of the generated parse tree.
      * @throw a string message if an error occurred.
@@ -38,8 +37,8 @@ public:
     ICodeNode *parse_statement(Token *token) throw (string);
 
 private:
-    // Synchronization set for THEN.
-    static set<PascalTokenType> WHEN_SET;
+    // Synchronization set for DO.
+    static set<PascalTokenType> SYM_SET;
 
     static bool INITIALIZED;
 
@@ -51,5 +50,8 @@ private:
 
 }}}}  // namespace wci::frontend::pascal::parsers
 
-
 #endif /* WHENSTATEMENTPARSER_H_ */
+
+
+
+    
